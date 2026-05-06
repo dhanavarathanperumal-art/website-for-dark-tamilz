@@ -784,9 +784,9 @@
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- Hidden YouTube Iframe for Audio -->
+  <!-- Hidden YouTube Player (autoplay removed, will start on user interaction only) -->
   <div id="yt-player" style="position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
-    <iframe id="youtube-player" width="1" height="1" src="https://www.youtube.com/embed/ypeGQhhaHbs?autoplay=1&controls=0&enablejsapi=1&cc_load_policy=0&modestbranding=1&playsinline=1&rel=0&showinfo=0" title="Montagen Fuego" allow="autoplay"></iframe>
+    <iframe id="youtube-player" width="1" height="1" src="https://www.youtube.com/embed/ypeGQhhaHbs?autoplay=0&controls=0&enablejsapi=1&cc_load_policy=0&modestbranding=1&playsinline=1&rel=0&showinfo=0" title="Montagen Fuego" allow="autoplay"></iframe>
   </div>
 
   <!-- ENTRY GATE -->
@@ -1015,9 +1015,10 @@
   </div>
 
   <script>
-    let youtubePlayer;
+    let youtubePlayer = null;
+    let pendingPlay = false;
 
-    // YouTube IFrame API
+    // YouTube IFrame API ready callback
     function onYouTubeIframeAPIReady() {
       youtubePlayer = new YT.Player('youtube-player', {
         events: {
@@ -1027,7 +1028,10 @@
     }
 
     function onPlayerReady(event) {
-      // Player is ready
+      if (pendingPlay && youtubePlayer && youtubePlayer.playVideo) {
+        youtubePlayer.playVideo();
+        pendingPlay = false;
+      }
     }
 
     // Load YouTube API
@@ -1036,7 +1040,7 @@
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // Custom Cursor Movement
+    // Custom mouse movement
     document.addEventListener('mousemove', (e) => {
       const cursor = document.getElementById('cursor');
       const cursorRing = document.getElementById('cursorRing');
@@ -1046,7 +1050,7 @@
       cursorRing.style.top = e.clientY + 'px';
     });
 
-    // Gate Canvas Animation
+    // Gate Canvas Particle Animation
     function setupGateCanvas() {
       const canvas = document.getElementById('gate-canvas');
       const ctx = canvas.getContext('2d');
@@ -1099,38 +1103,42 @@
       });
     }
 
-    // Enter Site Function with YouTube Audio
+    // ENTER SITE: plays audio on user interaction (click/Enter)
     function enterSite() {
       const gate = document.getElementById('gate');
       const mainSite = document.getElementById('main-site');
       
-      // Play YouTube video (audio)
+      // Attempt to play the YouTube video (song)
       if (youtubePlayer && youtubePlayer.playVideo) {
         youtubePlayer.playVideo();
+      } else {
+        // Player not ready yet, set a pending flag
+        pendingPlay = true;
       }
       
-      // Gate exit animation
+      // Animate gate exit
       gate.classList.add('exit');
       
-      // Show main site
+      // Reveal main site after animation
       setTimeout(() => {
         mainSite.classList.add('visible');
         setupBgCanvas();
         observeElements();
-      }, 500);
+      }, 600);
     }
 
-    // Keyboard Enter Support
+    // Keyboard ENTER support for gate
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && document.getElementById('gate').style.display !== 'none') {
+      if (e.key === 'Enter') {
         const gate = document.getElementById('gate');
-        if (!gate.classList.contains('exit')) {
+        // Only trigger if gate exists and hasn't started exit yet
+        if (gate && !gate.classList.contains('exit') && getComputedStyle(gate).display !== 'none') {
           enterSite();
         }
       }
     });
 
-    // Background Canvas
+    // Background Canvas (dynamic particles after entry)
     function setupBgCanvas() {
       const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
@@ -1181,7 +1189,7 @@
       });
     }
 
-    // Observe Elements for Reveal Animation
+    // Intersection Observer for reveal animations
     function observeElements() {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -1194,7 +1202,7 @@
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     }
 
-    // Initialize on page load
+    // Initialize entry gate animation
     setupGateCanvas();
   </script>
 </body>
