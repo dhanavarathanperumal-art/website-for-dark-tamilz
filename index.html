@@ -7,7 +7,7 @@
   <meta name="description" content="Dark Tamilz – A premium Tamil Discord community for gamers, creators, and tech minds. Join the darkness."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --black: #030303;
@@ -141,13 +141,6 @@
       transition: opacity 0.3s;
     }
     .gate-btn:hover::after { opacity: 0.3; }
-
-    .gate-skull {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      animation: float 3s ease-in-out infinite;
-      filter: drop-shadow(0 0 15px var(--crimson-bright));
-    }
 
     .gate-hint {
       margin-top: 1.5rem;
@@ -649,14 +642,6 @@
       pointer-events: none;
     }
 
-    .join-skull {
-      font-size: 5rem;
-      display: block;
-      margin-bottom: 2rem;
-      filter: drop-shadow(0 0 20px var(--crimson-bright)) drop-shadow(0 0 40px var(--purple));
-      animation: float 4s ease-in-out infinite;
-    }
-
     .join-title {
       font-family: 'Cinzel Decorative', serif;
       font-size: clamp(2rem, 5vw, 4rem);
@@ -806,7 +791,6 @@
   <div id="gate">
     <canvas id="gate-canvas"></canvas>
     <div class="gate-content">
-      <div class="gate-skull">💀</div>
       <div class="gate-title">DARK TAMILZ</div>
       <div class="gate-sub">Official Discord Community</div>
       <button class="gate-btn" onclick="enterSite()">ENTER THE DARK</button>
@@ -1001,175 +985,161 @@
 
     <!-- JOIN CTA -->
     <section id="join">
-      <span class="join-skull">💀</span>
-      <h2 class="join-title reveal">Ready to Enter<br/>The Darkness?</h2>
-      <p class="join-sub reveal">Join thousands of Tamil minds in the most premium Discord community.</p>
-      <div class="hero-cta-wrap reveal">
-        <a href="https://discord.gg/bT6FzSgd" target="_blank" class="btn-primary" style="font-size:0.9rem; padding:1.2rem 3rem;">
-          <span>🎮</span> JOIN DARK TAMILZ
-        </a>
-      </div>
+      <div class="join-title">Ready to Enter?</div>
+      <p class="join-sub">Step into the darkness. Join our premium Discord community today.</p>
+      <a href="https://discord.gg/bT6FzSgd" target="_blank" class="btn-primary">Join Now</a>
     </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-logo">DARK TAMILZ</div>
+      <p class="footer-txt">© 2024 Dark Tamilz. All rights reserved. Join the darkness.</p>
+    </footer>
 
     <!-- MUSIC BADGE -->
     <div id="music-badge">
+      <div class="music-icon">🎵</div>
+      <div class="music-info">
+        <div class="music-now">NOW PLAYING</div>
+        <div class="music-track">Dark Vibes</div>
+      </div>
       <div class="music-bars">
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
       </div>
-      <div class="music-info">
-        <span class="music-now">NOW PLAYING</span>
-        <span class="music-track">Poster Boy</span>
-      </div>
-      <span class="music-icon">💿</span>
     </div>
-
-    <!-- FOOTER -->
-    <footer>
-      <div class="footer-logo">DARK TAMILZ</div>
-      <div class="footer-txt">© 2025 Dark Tamilz · All Rights Reserved · Tamil Discord Community</div>
-    </footer>
   </div>
 
   <script>
-    // ─── CURSOR ────────────────────────────────────────────
+    // Cursor tracking
     const cursor = document.getElementById('cursor');
     const cursorRing = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    function animateCursor() {
-      cursor.style.left = mx + 'px';
-      cursor.style.top = my + 'px';
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      cursorRing.style.left = rx + 'px';
-      cursorRing.style.top = ry + 'px';
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
 
-    // ─── GATE PARTICLES ───────────────────────────────────
-    const gc = document.getElementById('gate-canvas');
-    const gctx = gc.getContext('2d');
-    gc.width = window.innerWidth;
-    gc.height = window.innerHeight;
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      cursorRing.style.left = e.clientX + 'px';
+      cursorRing.style.top = e.clientY + 'px';
+    });
 
-    const gParticles = Array.from({length: 120}, () => ({
-      x: Math.random() * gc.width,
-      y: Math.random() * gc.height,
-      r: Math.random() * 2 + 0.5,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      color: ['#c0152a','#d4a017','#5b0fa8','#39ff14'][Math.floor(Math.random()*4)],
-      alpha: Math.random() * 0.6 + 0.2
-    }));
+    // Gate canvas background
+    const gateCanvas = document.getElementById('gate-canvas');
+    const gateCtx = gateCanvas.getContext('2d');
 
-    function drawGate() {
-      gctx.clearRect(0,0,gc.width,gc.height);
-      gParticles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if(p.x < 0) p.x = gc.width;
-        if(p.x > gc.width) p.x = 0;
-        if(p.y < 0) p.y = gc.height;
-        if(p.y > gc.height) p.y = 0;
-        gctx.beginPath();
-        gctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        gctx.fillStyle = p.color;
-        gctx.globalAlpha = p.alpha;
-        gctx.fill();
-        gctx.globalAlpha = 1;
-      });
-      requestAnimationFrame(drawGate);
-    }
-    drawGate();
-
-    // ─── BG CANVAS ────────────────────────────────────────
-    const bgc = document.getElementById('bg-canvas');
-    const bgctx = bgc.getContext('2d');
-    bgc.width = window.innerWidth;
-    bgc.height = window.innerHeight;
-
-    const bgParticles = Array.from({length: 80}, () => ({
-      x: Math.random() * bgc.width,
-      y: Math.random() * bgc.height,
-      r: Math.random() * 1.5 + 0.3,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: -Math.random() * 0.5 - 0.1,
-      color: ['#c0152a','#d4a017','#9b30ff','#39ff14'][Math.floor(Math.random()*4)],
-      alpha: Math.random() * 0.4 + 0.1
-    }));
-
-    function drawBg() {
-      bgctx.clearRect(0,0,bgc.width,bgc.height);
-      bgParticles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if(p.y < -5) { p.y = bgc.height + 5; p.x = Math.random() * bgc.width; }
-        bgctx.beginPath();
-        bgctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        bgctx.fillStyle = p.color;
-        bgctx.globalAlpha = p.alpha;
-        bgctx.fill();
-        bgctx.globalAlpha = 1;
-      });
-      requestAnimationFrame(drawBg);
+    function resizeGateCanvas() {
+      gateCanvas.width = window.innerWidth;
+      gateCanvas.height = window.innerHeight;
+      drawGateBackground();
     }
 
-    // ─── ENTER SITE ───────────────────────────────────────
-    let ytPlayer = null;
+    function drawGateBackground() {
+      gateCtx.fillStyle = '#030303';
+      gateCtx.fillRect(0, 0, gateCanvas.width, gateCanvas.height);
+      
+      gateCtx.strokeStyle = 'rgba(255, 26, 53, 0.1)';
+      gateCtx.lineWidth = 1;
 
-    function onYTReady() {
-      ytPlayer = new YT.Player('yt-player', {
-        videoId: 'jOLT6ukrQSg',
-        playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: 'jOLT6ukrQSg' },
-        events: { onReady: () => {} }
-      });
-    }
-
-    window.onYouTubeIframeAPIReady = onYTReady;
-
-    // Load YT API
-    (function loadYT() {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(tag);
-    })();
-
-    function enterSite() {
-      const gate = document.getElementById('gate');
-      const main = document.getElementById('main-site');
-
-      gate.classList.add('exit');
-
-      if(ytPlayer && ytPlayer.playVideo) {
-        try { ytPlayer.setVolume(60); ytPlayer.playVideo(); } catch(e){}
+      for (let i = 0; i < gateCanvas.width; i += 50) {
+        gateCtx.beginPath();
+        gateCtx.moveTo(i, 0);
+        gateCtx.lineTo(i, gateCanvas.height);
+        gateCtx.stroke();
       }
 
+      for (let i = 0; i < gateCanvas.height; i += 50) {
+        gateCtx.beginPath();
+        gateCtx.moveTo(0, i);
+        gateCtx.lineTo(gateCanvas.width, i);
+        gateCtx.stroke();
+      }
+    }
+
+    resizeGateCanvas();
+    window.addEventListener('resize', resizeGateCanvas);
+
+    // BG Canvas
+    const bgCanvas = document.getElementById('bg-canvas');
+    const bgCtx = bgCanvas.getContext('2d');
+
+    function resizeBgCanvas() {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+    }
+
+    resizeBgCanvas();
+    window.addEventListener('resize', resizeBgCanvas);
+
+    let time = 0;
+    function animateBg() {
+      time += 0.01;
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+      bgCtx.strokeStyle = 'rgba(57, 255, 20, 0.05)';
+      bgCtx.lineWidth = 1;
+
+      for (let i = 0; i < 5; i++) {
+        const offset = (time * 20 + i * 100) % bgCanvas.height;
+        bgCtx.beginPath();
+        bgCtx.moveTo(0, offset);
+        bgCtx.lineTo(bgCanvas.width, offset + 50);
+        bgCtx.stroke();
+      }
+
+      requestAnimationFrame(animateBg);
+    }
+
+    animateBg();
+
+    // Gate entrance
+    function enterSite() {
+      const gate = document.getElementById('gate');
+      const mainSite = document.getElementById('main-site');
+
+      gate.classList.add('exit');
       setTimeout(() => {
         gate.style.display = 'none';
-        main.classList.add('visible');
-        drawBg();
-        initReveal();
-      }, 900);
+        mainSite.classList.add('visible');
+      }, 1200);
+
+      playEntranceAudio();
     }
 
-    // ─── SCROLL REVEAL ────────────────────────────────────
-    function initReveal() {
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach((e, i) => {
-          if(e.isIntersecting) {
-            setTimeout(() => e.target.classList.add('in-view'), i * 80);
-          }
-        });
-      }, { threshold: 0.1 });
-      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    function playEntranceAudio() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.frequency.value = 150;
+      gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
     }
 
-    window.addEventListener('resize', () => {
-      gc.width = bgc.width = window.innerWidth;
-      gc.height = bgc.height = window.innerHeight;
-    });
+    // Scroll reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+
+    function isInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+
+    function checkReveals() {
+      reveals.forEach((el) => {
+        if (isInViewport(el)) {
+          el.classList.add('in-view');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkReveals);
+    checkReveals();
   </script>
 </body>
 </html>
