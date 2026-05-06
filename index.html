@@ -7,7 +7,7 @@
   <meta name="description" content="Dark Tamilz – A premium Tamil Discord community for gamers, creators, and tech minds. Join the darkness."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --black: #030303;
@@ -784,6 +784,11 @@
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
+  <!-- Hidden Audio Player for Song -->
+  <audio id="audio-player" preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
   <!-- Hidden YouTube Player -->
   <div id="yt-player"></div>
 
@@ -794,7 +799,7 @@
       <div class="gate-title">DARK TAMILZ</div>
       <div class="gate-sub">Official Discord Community</div>
       <button class="gate-btn" onclick="enterSite()">ENTER THE DARK</button>
-      <div class="gate-hint">⚠ Click to enter — audio will play</div>
+      <div class="gate-hint">⚠ Press ENTER or Click to enter — audio will play</div>
     </div>
   </div>
 
@@ -998,10 +1003,10 @@
 
     <!-- MUSIC BADGE -->
     <div id="music-badge">
-      <div class="music-icon">🎵</div>
+      <span class="music-icon">🎵</span>
       <div class="music-info">
         <div class="music-now">NOW PLAYING</div>
-        <div class="music-track">Dark Vibes</div>
+        <div class="music-track">Poster Boy</div>
       </div>
       <div class="music-bars">
         <div class="bar"></div>
@@ -1013,133 +1018,173 @@
   </div>
 
   <script>
-    // Cursor tracking
-    const cursor = document.getElementById('cursor');
-    const cursorRing = document.getElementById('cursorRing');
+    // Track to display
+    const currentTrack = "Poster Boy";
+    
+    // Update music badge
+    document.querySelector('.music-track').textContent = currentTrack;
 
+    // Custom Cursor Movement
     document.addEventListener('mousemove', (e) => {
+      const cursor = document.getElementById('cursor');
+      const cursorRing = document.getElementById('cursorRing');
       cursor.style.left = e.clientX + 'px';
       cursor.style.top = e.clientY + 'px';
       cursorRing.style.left = e.clientX + 'px';
       cursorRing.style.top = e.clientY + 'px';
     });
 
-    // Gate canvas background
-    const gateCanvas = document.getElementById('gate-canvas');
-    const gateCtx = gateCanvas.getContext('2d');
-
-    function resizeGateCanvas() {
-      gateCanvas.width = window.innerWidth;
-      gateCanvas.height = window.innerHeight;
-      drawGateBackground();
-    }
-
-    function drawGateBackground() {
-      gateCtx.fillStyle = '#030303';
-      gateCtx.fillRect(0, 0, gateCanvas.width, gateCanvas.height);
+    // Gate Canvas Animation
+    function setupGateCanvas() {
+      const canvas = document.getElementById('gate-canvas');
+      const ctx = canvas.getContext('2d');
       
-      gateCtx.strokeStyle = 'rgba(255, 26, 53, 0.1)';
-      gateCtx.lineWidth = 1;
-
-      for (let i = 0; i < gateCanvas.width; i += 50) {
-        gateCtx.beginPath();
-        gateCtx.moveTo(i, 0);
-        gateCtx.lineTo(i, gateCanvas.height);
-        gateCtx.stroke();
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const particles = [];
+      
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.5,
+          speedX: (Math.random() - 0.5) * 2,
+          speedY: (Math.random() - 0.5) * 2,
+          color: ['#c0152a', '#ffd700', '#9b30ff', '#39ff14'][Math.floor(Math.random() * 4)]
+        });
       }
-
-      for (let i = 0; i < gateCanvas.height; i += 50) {
-        gateCtx.beginPath();
-        gateCtx.moveTo(0, i);
-        gateCtx.lineTo(gateCanvas.width, i);
-        gateCtx.stroke();
+      
+      function animateGate() {
+        ctx.fillStyle = 'rgba(3, 3, 3, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          
+          if (p.x > canvas.width) p.x = 0;
+          if (p.x < 0) p.x = canvas.width;
+          if (p.y > canvas.height) p.y = 0;
+          if (p.y < 0) p.y = canvas.height;
+          
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = 0.6;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+        
+        requestAnimationFrame(animateGate);
       }
-    }
-
-    resizeGateCanvas();
-    window.addEventListener('resize', resizeGateCanvas);
-
-    // BG Canvas
-    const bgCanvas = document.getElementById('bg-canvas');
-    const bgCtx = bgCanvas.getContext('2d');
-
-    function resizeBgCanvas() {
-      bgCanvas.width = window.innerWidth;
-      bgCanvas.height = window.innerHeight;
-    }
-
-    resizeBgCanvas();
-    window.addEventListener('resize', resizeBgCanvas);
-
-    let time = 0;
-    function animateBg() {
-      time += 0.01;
-      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-
-      bgCtx.strokeStyle = 'rgba(57, 255, 20, 0.05)';
-      bgCtx.lineWidth = 1;
-
-      for (let i = 0; i < 5; i++) {
-        const offset = (time * 20 + i * 100) % bgCanvas.height;
-        bgCtx.beginPath();
-        bgCtx.moveTo(0, offset);
-        bgCtx.lineTo(bgCanvas.width, offset + 50);
-        bgCtx.stroke();
-      }
-
-      requestAnimationFrame(animateBg);
-    }
-
-    animateBg();
-
-    // Gate entrance
-    function enterSite() {
-      const gate = document.getElementById('gate');
-      const mainSite = document.getElementById('main-site');
-
-      gate.classList.add('exit');
-      setTimeout(() => {
-        gate.style.display = 'none';
-        mainSite.classList.add('visible');
-      }, 1200);
-
-      playEntranceAudio();
-    }
-
-    function playEntranceAudio() {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-
-      oscillator.connect(gain);
-      gain.connect(audioContext.destination);
-
-      oscillator.frequency.value = 150;
-      gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.5);
-    }
-
-    // Scroll reveal animations
-    const reveals = document.querySelectorAll('.reveal');
-
-    function isInViewport(el) {
-      const rect = el.getBoundingClientRect();
-      return rect.top < window.innerHeight && rect.bottom > 0;
-    }
-
-    function checkReveals() {
-      reveals.forEach((el) => {
-        if (isInViewport(el)) {
-          el.classList.add('in-view');
-        }
+      
+      animateGate();
+      
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
       });
     }
 
-    window.addEventListener('scroll', checkReveals);
-    checkReveals();
+    // Enter Site Function with Enhanced Audio
+    function enterSite() {
+      const gate = document.getElementById('gate');
+      const mainSite = document.getElementById('main-site');
+      const audioPlayer = document.getElementById('audio-player');
+      
+      // Play audio
+      audioPlayer.play().catch(err => {
+        console.log('Audio playback failed:', err);
+      });
+      
+      // Gate exit animation
+      gate.classList.add('exit');
+      
+      // Show main site
+      setTimeout(() => {
+        mainSite.classList.add('visible');
+        setupBgCanvas();
+        observeElements();
+      }, 500);
+    }
+
+    // Keyboard Enter Support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.getElementById('gate').style.display !== 'none') {
+        const gate = document.getElementById('gate');
+        if (!gate.classList.contains('exit')) {
+          enterSite();
+        }
+      }
+    });
+
+    // Background Canvas
+    function setupBgCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const particles = [];
+      
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 0.5,
+          speedX: (Math.random() - 0.5) * 0.5,
+          speedY: (Math.random() - 0.5) * 0.5,
+          color: ['rgba(255, 215, 0, 0.3)', 'rgba(192, 21, 42, 0.3)', 'rgba(155, 48, 255, 0.3)'][Math.floor(Math.random() * 3)]
+        });
+      }
+      
+      function animateBg() {
+        ctx.fillStyle = 'rgba(3, 3, 3, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          
+          if (p.x > canvas.width) p.x = 0;
+          if (p.x < 0) p.x = canvas.width;
+          if (p.y > canvas.height) p.y = 0;
+          if (p.y < 0) p.y = canvas.height;
+          
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        
+        requestAnimationFrame(animateBg);
+      }
+      
+      animateBg();
+      
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    }
+
+    // Observe Elements for Reveal Animation
+    function observeElements() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    // Initialize on page load
+    setupGateCanvas();
   </script>
 </body>
 </html>
