@@ -784,13 +784,10 @@
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- Hidden Audio Player for Song -->
-  <audio id="audio-player" preload="auto">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Hidden YouTube Player -->
-  <div id="yt-player"></div>
+  <!-- Hidden YouTube Iframe for Audio -->
+  <div id="yt-player" style="position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
+    <iframe id="youtube-player" width="1" height="1" src="https://www.youtube.com/embed/ypeGQhhaHbs?autoplay=1&controls=0&enablejsapi=1&cc_load_policy=0&modestbranding=1&playsinline=1&rel=0&showinfo=0" title="Montagen Fuego" allow="autoplay"></iframe>
+  </div>
 
   <!-- ENTRY GATE -->
   <div id="gate">
@@ -1006,7 +1003,7 @@
       <span class="music-icon">🎵</span>
       <div class="music-info">
         <div class="music-now">NOW PLAYING</div>
-        <div class="music-track">Poster Boy</div>
+        <div class="music-track">Montagen Fuego</div>
       </div>
       <div class="music-bars">
         <div class="bar"></div>
@@ -1018,11 +1015,26 @@
   </div>
 
   <script>
-    // Track to display
-    const currentTrack = "Poster Boy";
-    
-    // Update music badge
-    document.querySelector('.music-track').textContent = currentTrack;
+    let youtubePlayer;
+
+    // YouTube IFrame API
+    function onYouTubeIframeAPIReady() {
+      youtubePlayer = new YT.Player('youtube-player', {
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      // Player is ready
+    }
+
+    // Load YouTube API
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     // Custom Cursor Movement
     document.addEventListener('mousemove', (e) => {
@@ -1087,16 +1099,15 @@
       });
     }
 
-    // Enter Site Function with Enhanced Audio
+    // Enter Site Function with YouTube Audio
     function enterSite() {
       const gate = document.getElementById('gate');
       const mainSite = document.getElementById('main-site');
-      const audioPlayer = document.getElementById('audio-player');
       
-      // Play audio
-      audioPlayer.play().catch(err => {
-        console.log('Audio playback failed:', err);
-      });
+      // Play YouTube video (audio)
+      if (youtubePlayer && youtubePlayer.playVideo) {
+        youtubePlayer.playVideo();
+      }
       
       // Gate exit animation
       gate.classList.add('exit');
